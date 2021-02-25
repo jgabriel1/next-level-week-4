@@ -39,11 +39,11 @@ describe('SendMail', () => {
   });
 
   it('should send the mail', async () => {
-    const logCapture: string[] = [];
+    // const logCapture: string[] = [];
 
-    console.log = jest.fn((input: string) => {
-      logCapture.push(input);
-    });
+    // console.log = jest.fn((input: string) => {
+    //   logCapture.push(input);
+    // });
 
     const response = await client.post('/send_mail').send({
       email: user.email,
@@ -51,7 +51,7 @@ describe('SendMail', () => {
     });
 
     expect(response.status).toEqual(200);
-    expect(logCapture).toHaveLength(2);
+    // expect(logCapture).toHaveLength(2);
   }, 20000);
 
   it('should not create a second mail service class instance (singleton)', async () => {
