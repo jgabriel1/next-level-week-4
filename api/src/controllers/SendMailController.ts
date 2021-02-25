@@ -2,6 +2,7 @@ import { Request, Response } from 'express';
 import { SurveysRepository } from '../repositories/SurveysRepository';
 import { SurveysUsersRepository } from '../repositories/SurveysUsersRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
+import { SendMailService } from '../services/SendMailService';
 
 export class SendMailController {
   async execute(request: Request, response: Response): Promise<Response> {
@@ -38,7 +39,13 @@ export class SendMailController {
     await surveysUsersRepository.save(surveyUser);
 
     // Enviar e-mail para o usuário:
-    // TODO
+    const sendMailService = await SendMailService.getInstance();
+
+    await sendMailService.execute({
+      to: email,
+      subject: surveyExists.title,
+      body: surveyExists.description,
+    });
 
     return response.json(surveyUser);
   }
