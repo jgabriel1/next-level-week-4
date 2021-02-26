@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import * as yup from 'yup';
+import { AppError } from '../errors/AppError';
 import { UsersRepository } from '../repositories/UsersRepository';
 
 export class UsersController {
@@ -14,9 +15,7 @@ export class UsersController {
     try {
       await schema.validate(request.body, { abortEarly: false });
     } catch (err) {
-      return response.status(400).json({
-        error: err,
-      });
+      throw new AppError(err);
     }
 
     const usersRepository = UsersRepository.getRepository();
@@ -25,11 +24,7 @@ export class UsersController {
       email,
     });
 
-    if (userAlreadyExists) {
-      return response.status(400).json({
-        error: 'E-mail already registered.',
-      });
-    }
+    if (userAlreadyExists) throw new AppError('E-mail already registered.');
 
     const user = usersRepository.create({
       name,

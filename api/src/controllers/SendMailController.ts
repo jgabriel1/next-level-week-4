@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import path from 'path';
+import { AppError } from '../errors/AppError';
 import { SurveysRepository } from '../repositories/SurveysRepository';
 import { SurveysUsersRepository } from '../repositories/SurveysUsersRepository';
 import { UsersRepository } from '../repositories/UsersRepository';
@@ -18,19 +19,13 @@ export class SendMailController {
       email,
     });
 
-    if (!user)
-      return response.status(400).json({
-        error: "User doesn't exist.",
-      });
+    if (!user) throw new AppError("User doesn't exist.");
 
     const survey = await surveysRepository.findOne({
       id: survey_id,
     });
 
-    if (!survey)
-      return response.status(400).json({
-        error: "Survey doesn't exist.",
-      });
+    if (!survey) throw new AppError("Survey doesn't exist.");
 
     // E-mail data:
 

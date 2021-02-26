@@ -1,4 +1,5 @@
 import { Request, Response } from 'express';
+import { AppError } from '../errors/AppError';
 import { SurveysUsersRepository } from '../repositories/SurveysUsersRepository';
 
 export class AnswersController {
@@ -12,10 +13,7 @@ export class AnswersController {
       id: String(surveyUserId),
     });
 
-    if (!surveyUser)
-      return response.status(400).json({
-        error: 'Invalid survey and user combination.',
-      });
+    if (!surveyUser) throw new AppError('Invalid survey and user combination.');
 
     Object.assign(surveyUser, { value: Number(value) });
 
